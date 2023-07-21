@@ -24,26 +24,46 @@ impl Default for Person {
     }
 }
 
-// Your task is to complete this implementation in order for the line `let p =
-// Person::from("Mark,20")` to compile Please note that you'll need to parse the
-// age component into a `usize` with something like `"4".parse::<usize>()`. The
-// outcome of this needs to be handled appropriately.
+// Your task is to complete this implementation
+// in order for the line `let p = Person::from("Mark,20")` to compile
+// Please note that you'll need to parse the age component into a `usize`
+// with something like `"4".parse::<usize>()`. The outcome of this needs to
+// be handled appropriately.
 //
 // Steps:
-// 1. If the length of the provided string is 0, then return the default of
-//    Person.
-// 2. Split the given string on the commas present in it.
-// 3. Extract the first element from the split operation and use it as the name.
-// 4. If the name is empty, then return the default of Person.
-// 5. Extract the other element from the split operation and parse it into a
-//    `usize` as the age.
-// If while parsing the age, something goes wrong, then return the default of
-// Person Otherwise, then return an instantiated Person object with the results
-
-// I AM NOT DONE
+// 1. If the length of the provided string is 0, then return the default of Person
+// 2. Split the given string on the commas present in it
+// 3. Extract the first element from the split operation and use it as the name
+// 4. If the name is empty, then return the default of Person
+// 5. Extract the other element from the split operation and parse it into a `usize` as the age
+// If while parsing the age, something goes wrong, then return the default of Person
+// Otherwise, then return an instantiated Person object with the results
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        if s==""{
+            Person::default()
+        } else {
+        s.split(",").map(|x| x.into()).collect::<Vec<String>>().into()
+        }
+    }
+}
+
+impl From<Vec<String>> for Person{
+    fn from(s:Vec<String>)->Self{
+        if s.len()!=2{
+            return Person::default()
+        }
+        let number = s[1].parse();
+        let age;
+        if number.is_err() || s[0]==""{
+            Person::default()
+        } else {
+            age = number.unwrap();
+            Person{name:s[0].clone(),age:age}
+        }
+
+
     }
 }
 
@@ -82,8 +102,7 @@ mod tests {
     }
     #[test]
     fn test_bad_age() {
-        // Test that "Mark,twenty" will return the default person due to an
-        // error in parsing age
+        // Test that "Mark,twenty" will return the default person due to an error in parsing age
         let p = Person::from("Mark,twenty");
         assert_eq!(p.name, "John");
         assert_eq!(p.age, 30);
